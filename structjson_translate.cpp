@@ -3,8 +3,8 @@
 #include <fstream>
 
 
-#include "jcejson_translate.h"
-#include "jcejson_lib.h"
+#include "structjson_translate.h"
+#include "structjson_lib.h"
 
 using namespace std;
 

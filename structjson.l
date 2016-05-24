@@ -1,6 +1,6 @@
 %{
-#include "jcejson_lib.h"
-#include "jcejson_bison.h"
+#include "structjson_lib.h"
+#include "structjson_bison.h"
 %}
 %option yylineno
 %%

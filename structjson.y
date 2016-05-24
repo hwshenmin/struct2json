@@ -1,6 +1,6 @@
 
 %{
-#include "jcejson_lib.h"
+#include "structjson_lib.h"
 %}
 
 %union {

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include "jcejson_lib.h"
-#include "jcejson_translate.h"
+#include "structjson_lib.h"
+#include "structjson_translate.h"
 
 using namespace std;
 

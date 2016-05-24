@@ -1,24 +1,24 @@
 
 
-all:structjson
+all:struct2json
 
 
-objs = jcejson_bison.o jcejson_flex.o jcejson_lib.o translate.o jcejson_translate.o
+objs = structjson_bison.o structjson_flex.o structjson_lib.o translate.o structjson_translate.o
 
 
 
-structjson: $(objs)
+struct2json: $(objs)
 	g++ -o $@ $^ -lfl
 
 
-jcejson_flex.c: jcejson.l
+structjson_flex.c: structjson.l
 	flex -o $@ $^
 
-jcejson_bison.c: jcejson.y
+structjson_bison.c: structjson.y
 	bison -o $@ -d $^
 
 
-$(objs):jcejson_lib.h
+$(objs):structjson_lib.h
 
 
 .phony:clean
@@ -26,4 +26,4 @@ $(objs):jcejson_lib.h
 
 
 clean:
-	rm -f *.o jcejson jcejson_bison.c jcejson_bison.h jcejson_flex.c
+	rm -f *.o struct2json structjson_bison.c structjson_bison.h structjson_flex.c
