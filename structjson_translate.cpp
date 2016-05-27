@@ -173,6 +173,14 @@ int Struct::Struct2JsonDom(Context &ctx)
 
     cpp <<"return 0;\n";
     cpp << "}\n";
+    //no name
+
+    cpp << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2jsondom_noname(" << ctx.pmodule->m_sName << "::" << m_sName << " &info, " << "Document &dom)\n";
+    cpp << "{\n";
+    cpp << "int ret = " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2jsonvalue(info, dom, dom.GetAllocator());\n";
+    cpp << "if (ret != 0)\n return ret;\n";
+    cpp << "return 0;\n";
+    cpp << "}\n";
     return 0;
 }
 int Struct::Struct2JsonValue(Context &ctx)
@@ -246,11 +254,15 @@ int Struct::Struct2Json(Context &ctx)
     stringstream &cpp = ctx.cpp;
     stringstream &header = ctx.header;
 
-    header << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2json(" << ctx.pmodule->m_sName << "::" << m_sName << " &info, " << "std::string &json);\n";
-    cpp << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2json(" << ctx.pmodule->m_sName << "::" << m_sName << " &info, " << "std::string &json)\n";
+    header << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2json(" << ctx.pmodule->m_sName << "::" << m_sName << " &info, " << "std::string &json, bool bnoname=false);\n";
+    cpp << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2json(" << ctx.pmodule->m_sName << "::" << m_sName << " &info, " << "std::string &json, bool bnoname)\n";
     cpp << "{\n";
     cpp << "Document dom;\n";
-    cpp << "int ret = " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2jsondom(info, dom);\n";
+    cpp << "int ret = 0;\n";
+    cpp << "if (bnoname)\n";
+    cpp << "ret = " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2jsondom_noname(info, dom);\n";
+    cpp << "else\n";
+    cpp << "ret = " << ctx.pmodule->m_sName << "_" << m_sName << "_struct2jsondom(info, dom);\n";
     cpp << "if (ret != 0) return ret;\n";
     cpp << "StringBuffer sb;\n";
     cpp << "Writer<StringBuffer> writer(sb);\n";
@@ -373,6 +385,7 @@ int Module::GenerateCode(Context &ctx)
     cpp << "#include \"rapidjson/stringbuffer.h\"\n";
     cpp << "#include \"rapidjson/writer.h\"\n";
     cpp << "using namespace rapidjson;\n";
+    cpp << "using namespace std;\n";
     cpp << "static const int E_BUF_NOT_ENOUGH = -22220000;\n";
     cpp << "static const int E_TYPE_NOT_MATCH = -22220001;\n";
     cpp << "static const int E_MEMBER_NOT_FOUND = -22220002;\n";
