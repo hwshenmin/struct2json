@@ -240,6 +240,14 @@ int Struct::JsonDom2Struct(Context &ctx)
     cpp << "if (itr == dom.MemberEnd())\n return E_MEMBER_NOT_FOUND;\n";
     cpp << "return " << ctx.pmodule->m_sName << "_" << m_sName << "_jsonvalue2struct(itr->value, info);\n";
     cpp << "}\n";
+
+    cpp << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_jsondom2struct_noname(" << "const Document &dom, " << ctx.pmodule->m_sName << "::" << m_sName << " &info)\n";
+    //header << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_jsondom2struct_noname(" << "const rapidjson::Document &dom, " << ctx.pmodule->m_sName << "::" << m_sName << " &info);\n";
+    cpp << "{\n";
+    //cpp << "Value::ConstMemberIterator itr = dom.FindMember(\"" << m_sName << "\");\n";
+    //cpp << "if (itr == dom.MemberEnd())\n return E_MEMBER_NOT_FOUND;\n";
+    cpp << "return " << ctx.pmodule->m_sName << "_" << m_sName << "_jsonvalue2struct(dom, info);\n";
+    cpp << "}\n";
     return 0;
 }
 int Struct::Struct2Json(Context &ctx)
@@ -285,12 +293,17 @@ int Struct::Json2Struct(Context &ctx)
     stringstream &cpp = ctx.cpp;
     stringstream &header = ctx.header;
 
-    header << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_json2struct(" << "const char *json, " << ctx.pmodule->m_sName << "::" << m_sName << " &info);\n";
-    cpp << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_json2struct(" << "const char *json, " << ctx.pmodule->m_sName << "::" << m_sName << " &info)\n";
+    header << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_json2struct(" << "const char *json, " << ctx.pmodule->m_sName << "::" << m_sName << " &info, bool noname=false);\n";
+    cpp << "int " << ctx.pmodule->m_sName << "_" << m_sName << "_json2struct(" << "const char *json, " << ctx.pmodule->m_sName << "::" << m_sName << " &info, bool noname)\n";
     cpp << "{\n";
     cpp << "Document dom;\n";
     cpp << "if (dom.Parse(json).HasParseError()) return E_PARSE_FAIL;\n";
-    cpp << "return " << ctx.pmodule->m_sName << "_" << m_sName << "_jsondom2struct(dom, info);\n";
+    cpp << "int ret;\n";
+    cpp << "if (noname)\n";
+    cpp << "ret = " << ctx.pmodule->m_sName << "_" << m_sName << "_jsondom2struct_noname(dom, info);\n";
+    cpp << "else\n";
+    cpp << "ret = " << ctx.pmodule->m_sName << "_" << m_sName << "_jsondom2struct(dom, info);\n";
+    cpp << "return ret;\n";
     cpp << "}\n";
 
     return 0;
